@@ -9,10 +9,19 @@ DATABASE = os.getenv("DB_DATABASE", "SCHOOL")
 USER = os.getenv("DB_USER")
 PASSWORD = os.getenv("DB_PASSWORD")
 
+# Selection du pilote ODBC disponible
+drivers = pyodbc.drivers()
+if "ODBC Driver 17 for SQL Server" in drivers:
+    DRIVER_NAME = "ODBC Driver 17 for SQL Server"
+elif "ODBC Driver 18 for SQL Server" in drivers:
+    DRIVER_NAME = "ODBC Driver 18 for SQL Server"
+else:
+    DRIVER_NAME = "SQL Server"
+
 # Chaine de connexion ODBC construite dynamiquement
 if USER and PASSWORD:
     CONNECTION_STRING = (
-        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"DRIVER={{{DRIVER_NAME}}};"
         f"SERVER={SERVER};"
         f"DATABASE={DATABASE};"
         f"UID={USER};"
@@ -20,7 +29,7 @@ if USER and PASSWORD:
     )
 else:
     CONNECTION_STRING = (
-        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"DRIVER={{{DRIVER_NAME}}};"
         f"SERVER={SERVER};"
         f"DATABASE={DATABASE};"
         f"Trusted_Connection=yes;"
