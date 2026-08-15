@@ -6,17 +6,25 @@ from fastapi import HTTPException
 # Lit le serveur et la base depuis le .env — avec valeur par defaut si absent
 SERVER = os.getenv("DB_SERVER", r"GUILLAUME-AHIVO\SQLEXPRESS")
 DATABASE = os.getenv("DB_DATABASE", "SCHOOL")
+USER = os.getenv("DB_USER")
+PASSWORD = os.getenv("DB_PASSWORD")
 
 # Chaine de connexion ODBC construite dynamiquement
-# - DRIVER : pilote ODBC SQL Server installe sur la machine
-# - Trusted_Connection=yes : authentification Windows integree
-#   (utilise le compte Windows courant, pas de user/password SQL)
-CONNECTION_STRING = (
-    f"DRIVER={{ODBC Driver 17 for SQL Server}};"
-    f"SERVER={SERVER};"
-    f"DATABASE={DATABASE};"
-    f"Trusted_Connection=yes;"
-)
+if USER and PASSWORD:
+    CONNECTION_STRING = (
+        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"SERVER={SERVER};"
+        f"DATABASE={DATABASE};"
+        f"UID={USER};"
+        f"PWD={PASSWORD};"
+    )
+else:
+    CONNECTION_STRING = (
+        f"DRIVER={{ODBC Driver 17 for SQL Server}};"
+        f"SERVER={SERVER};"
+        f"DATABASE={DATABASE};"
+        f"Trusted_Connection=yes;"
+    )
 
 
 # ─────────────────────────────────────────
