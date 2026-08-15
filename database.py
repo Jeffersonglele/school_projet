@@ -26,6 +26,8 @@ if USER and PASSWORD:
         f"DATABASE={DATABASE};"
         f"UID={USER};"
         f"PWD={PASSWORD};"
+        f"Encrypt=yes;"
+        f"TrustServerCertificate=yes;"
     )
 else:
     CONNECTION_STRING = (
@@ -49,10 +51,9 @@ def get_connection():
         conn = pyodbc.connect(CONNECTION_STRING, timeout=5)
         return conn
     except pyodbc.Error as e:
-        # HTTPException au lieu d'une Exception generique : FastAPI sait la
-        # transformer en vraie reponse HTTP 503, avec un message clair pour
-        # le client, au lieu d'un 500 brut illisible.
+        print(f"ERREUR DE CONNEXION DB: {e}")
+        # HTTPException au lieu d'une Exception generique
         raise HTTPException(
             status_code=503,
-            detail="Impossible de se connecter à la base de données. Réessaie dans quelques instants.",
+            detail=f"Impossible de se connecter à la base de données. ({e})",
         )
