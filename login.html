@@ -367,10 +367,8 @@
 
     try {
       await login(usernameInput.value.trim(), passwordInput.value);
-      banner.style.background = "rgba(99,153,34,0.12)";
-      banner.style.color = "#97C459";
-      banner.textContent = "Connexion réussie. (La page suivante n'est pas encore construite.)";
-      banner.classList.add("visible");
+      // Redirection vers le tableau de bord
+      window.location.href = "dashboard.html";
     } catch (err) {
       banner.style.background = "rgba(226,75,74,0.12)";
       banner.style.color = "#E24B4A";
