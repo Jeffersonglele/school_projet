@@ -10,6 +10,9 @@ avec p_idUtilisateurConnecte = NULL (personne n'est connecte au moment de
 la creation du tout premier compte, la colonne CreePar accepte NULL).
 """
 
+from dotenv import load_dotenv
+load_dotenv()
+
 from database import get_connection
 from security import hash_password
 
