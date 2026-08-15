@@ -1,0 +1,968 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SCHOOL — Utilisateurs</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg-0: #0B0C0E;
+    --bg-1: #111318;
+    --bg-2: #15171B;
+    --border: #1E2024;
+    --border-strong: #24262B;
+
+    --text-primary: #F2EDE4;
+    --text-secondary: #8A8D93;
+    --text-muted: #6B6E74;
+    --text-faint: #4A4C51;
+
+    --gold: #C9930A;
+    --gold-dim: rgba(201, 147, 10, 0.14);
+    --on-gold: #1A1300;
+
+    --good: #97C459;
+    --good-bg: rgba(99, 153, 34, 0.12);
+    --danger: #E24B4A;
+    --danger-bg: rgba(226, 75, 74, 0.12);
+
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-0);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Topbar ---------- */
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-left { display: flex; align-items: center; gap: 22px; }
+
+  .topbar-brand { display: flex; align-items: baseline; gap: 10px; }
+  .topbar-brand span.mark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: 3px;
+  }
+  .topbar-brand span.sep {
+    width: 4px; height: 4px; border-radius: 50%;
+    background: var(--gold); display: inline-block;
+  }
+  .topbar-brand span.section {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+  }
+
+  .back-link {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 12.5px;
+    color: var(--text-secondary);
+  }
+  .back-link:hover { color: var(--text-primary); }
+
+  .topbar-user { display: flex; align-items: center; gap: 14px; }
+  .user-chip {
+    display: flex; align-items: center; gap: 9px;
+    padding: 6px 12px 6px 6px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 30px;
+  }
+  .user-chip .avatar {
+    width: 26px; height: 26px; border-radius: 50%;
+    background: var(--gold-dim); color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 12px;
+  }
+  .user-chip .name { font-size: 12.5px; color: var(--text-primary); }
+  .user-chip .role {
+    font-size: 10px; color: var(--gold);
+    letter-spacing: 0.5px; text-transform: uppercase;
+  }
+
+  .btn-icon {
+    width: 34px; height: 34px; border-radius: 8px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-2);
+    color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer;
+  }
+  .btn-icon:hover { color: var(--danger); border-color: var(--danger); }
+
+  /* ---------- Layout ---------- */
+
+  .page { max-width: 1040px; margin: 0 auto; padding: 40px 32px 80px; }
+
+  .page-head {
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+  }
+  .page-head p.eyebrow {
+    font-size: 11.5px; color: var(--gold);
+    letter-spacing: 1.5px; text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .page-head h1 {
+    font-family: var(--font-display);
+    font-weight: 600; font-size: 32px;
+    margin: 0 0 6px;
+  }
+  .page-head p.sub { font-size: 13.5px; color: var(--text-secondary); margin: 0; }
+
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-size: 13px; font-weight: 500;
+    padding: 11px 18px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+    white-space: nowrap;
+  }
+  .btn-primary { background: var(--gold); color: var(--on-gold); }
+  .btn-primary:hover { background: #DBA31A; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+  .btn-secondary {
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+  }
+  .btn-secondary:hover { border-color: var(--text-muted); }
+  .btn-ghost-danger {
+    background: transparent;
+    border: 1px solid var(--border-strong);
+    color: var(--danger);
+  }
+  .btn-ghost-danger:hover { border-color: var(--danger); background: var(--danger-bg); }
+  .btn-block { width: 100%; justify-content: center; }
+
+  .status-banner {
+    margin-top: 20px;
+    font-size: 12.5px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    display: none;
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+  .status-banner.visible { display: block; }
+  .status-banner.success { background: var(--good-bg); color: var(--good); }
+
+  /* ---------- Toolbar ---------- */
+
+  .toolbar {
+    margin-top: 30px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .search-box {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-1);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 10px 14px;
+  }
+  .search-box:focus-within { border-color: var(--gold); }
+  .search-box i { color: var(--text-muted); font-size: 15px; }
+  .search-box input {
+    border: none; background: transparent; outline: none;
+    color: var(--text-primary); font-size: 13px; width: 100%;
+    font-family: inherit;
+  }
+  .search-box input::placeholder { color: var(--text-faint); }
+
+  .role-filter {
+    background: var(--bg-1);
+    border: 1px solid var(--border-strong);
+    border-radius: 8px;
+    padding: 10px 12px;
+    color: var(--text-primary);
+    font-size: 12.5px;
+    font-family: inherit;
+    outline: none;
+  }
+  .role-filter:focus { border-color: var(--gold); }
+
+  /* ---------- Table ---------- */
+
+  .table-wrap {
+    margin-top: 18px;
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-1);
+    overflow: hidden;
+  }
+
+  table { width: 100%; border-collapse: collapse; }
+
+  thead th {
+    text-align: left;
+    font-size: 10.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-weight: 500;
+  }
+
+  tbody tr { border-bottom: 1px solid var(--border); }
+  tbody tr:last-child { border-bottom: none; }
+  tbody tr:hover { background: var(--bg-2); }
+
+  td {
+    padding: 14px 20px;
+    font-size: 13px;
+    vertical-align: middle;
+  }
+
+  td.name-cell { display: flex; align-items: center; gap: 10px; }
+  td.name-cell .avatar-sm {
+    width: 28px; height: 28px; border-radius: 50%;
+    background: var(--gold-dim); color: var(--gold);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 11px; flex-shrink: 0;
+  }
+  td.name-cell .fullname { color: var(--text-primary); }
+
+  .role-pill {
+    display: inline-block;
+    font-size: 10.5px;
+    padding: 4px 10px;
+    border-radius: 20px;
+    background: var(--gold-dim);
+    color: var(--gold);
+    letter-spacing: 0.3px;
+  }
+  .role-pill.non-admin {
+    background: rgba(138, 141, 147, 0.14);
+    color: var(--text-secondary);
+  }
+
+  td.meta { color: var(--text-faint); font-family: var(--font-mono); font-size: 11.5px; }
+
+  .row-actions { display: flex; gap: 6px; justify-content: flex-end; }
+  .row-actions button {
+    width: 30px; height: 30px; border-radius: 6px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-2);
+    color: var(--text-secondary);
+    display: flex; align-items: center; justify-content: center;
+    cursor: pointer; font-size: 13px;
+  }
+  .row-actions button:hover { color: var(--gold); border-color: var(--gold); }
+  .row-actions button.danger:hover { color: var(--danger); border-color: var(--danger); }
+
+  .empty-state, .loading-state {
+    padding: 40px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12.5px;
+  }
+
+  /* ---------- Modal ---------- */
+
+  .modal-overlay {
+    position: fixed; inset: 0;
+    background: rgba(11, 12, 14, 0.7);
+    display: none;
+    align-items: center; justify-content: center;
+    padding: 20px;
+    z-index: 50;
+  }
+  .modal-overlay.visible { display: flex; }
+
+  .modal-card {
+    width: 100%; max-width: 380px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 26px 26px 24px;
+  }
+  .modal-head {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 18px;
+  }
+  .modal-head h2 {
+    font-family: var(--font-display);
+    font-weight: 600; font-size: 21px; margin: 0;
+  }
+  .modal-close {
+    width: 28px; height: 28px; border-radius: 6px;
+    border: none; background: transparent;
+    color: var(--text-muted); cursor: pointer;
+    display: flex; align-items: center; justify-content: center; font-size: 15px;
+  }
+  .modal-close:hover { color: var(--text-primary); }
+
+  .modal-banner {
+    font-size: 12.5px; padding: 9px 12px; border-radius: 6px;
+    margin-bottom: 16px; display: none;
+    background: var(--danger-bg); color: var(--danger);
+  }
+  .modal-banner.visible { display: block; }
+
+  .field-group { margin-bottom: 16px; }
+  .field-group label {
+    display: block; font-size: 11.5px; color: var(--text-secondary);
+    margin-bottom: 7px; letter-spacing: 0.3px;
+  }
+  .input-icon {
+    display: flex; align-items: center; gap: 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px; padding: 10px 12px;
+  }
+  .input-icon:focus-within { border-color: var(--gold); }
+  .input-icon i { font-size: 15px; color: var(--text-muted); flex-shrink: 0; }
+  .input-icon i.toggle { margin-left: auto; cursor: pointer; }
+  .input-icon input, .input-icon select {
+    border: none; background: transparent; outline: none;
+    color: var(--text-primary); font-size: 13px; width: 100%;
+    font-family: inherit;
+  }
+  .input-icon input::placeholder { color: var(--text-faint); }
+  .input-icon select { appearance: none; cursor: pointer; }
+
+  .field-error {
+    font-size: 11.5px; color: var(--danger);
+    margin-top: 5px; display: none;
+  }
+  .field-error.visible { display: block; }
+
+  .field-hint { font-size: 11px; color: var(--text-muted); margin-top: 5px; }
+
+  .modal-actions { display: flex; gap: 10px; margin-top: 6px; }
+  .modal-actions .btn { flex: 1; }
+
+  .modal-footlink {
+    margin-top: 16px;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+    cursor: pointer;
+  }
+  .modal-footlink:hover { color: var(--gold); }
+
+  @media (max-width: 640px) {
+    .toolbar { flex-direction: column; align-items: stretch; }
+    thead { display: none; }
+    table, tbody, tr, td { display: block; width: 100%; }
+    tbody tr { padding: 14px 20px; }
+    td { padding: 4px 0; border: none; }
+    td.name-cell { padding: 4px 0 8px; }
+    .row-actions { justify-content: flex-start; margin-top: 8px; }
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-left">
+    <div class="topbar-brand">
+      <span class="mark">SCHOOL</span>
+      <span class="sep"></span>
+      <span class="section">Utilisateurs</span>
+    </div>
+    <a class="back-link" href="dashboard.html">
+      <i class="ti ti-arrow-left"></i> Tableau de bord
+    </a>
+  </div>
+  <div class="topbar-user">
+    <div class="user-chip">
+      <span class="avatar" id="user-avatar">·</span>
+      <span>
+        <span class="name" id="user-name">—</span><br />
+        <span class="role" id="user-role">—</span>
+      </span>
+    </div>
+    <button class="btn-icon" id="logout-btn" title="Se déconnecter" aria-label="Se déconnecter">
+      <i class="ti ti-logout"></i>
+    </button>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="page-head">
+    <div>
+      <p class="eyebrow">Administration</p>
+      <h1>Utilisateurs</h1>
+      <p class="sub">Comptes ayant accès à la plateforme.</p>
+    </div>
+    <button class="btn btn-primary" id="open-create-btn">
+      <i class="ti ti-plus"></i> Nouvel utilisateur
+    </button>
+  </div>
+
+  <div class="status-banner" id="page-banner"></div>
+
+  <div class="toolbar">
+    <div class="search-box">
+      <i class="ti ti-search"></i>
+      <input type="text" id="search-input" placeholder="Rechercher un nom ou un prénom…" />
+    </div>
+    <select class="role-filter" id="role-filter">
+      <option value="">Tous les rôles</option>
+    </select>
+  </div>
+
+  <div class="table-wrap">
+    <table>
+      <thead>
+        <tr>
+          <th>Utilisateur</th>
+          <th>Rôle</th>
+          <th>Créé par</th>
+          <th>Modifié par</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody id="users-tbody">
+        <tr><td colspan="5"><div class="loading-state">Chargement…</div></td></tr>
+      </tbody>
+    </table>
+  </div>
+
+</div>
+
+<!-- ---------- Modal : créer / modifier ---------- -->
+<div class="modal-overlay" id="user-modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2 id="user-modal-title">Nouvel utilisateur</h2>
+      <button class="modal-close" id="user-modal-close" aria-label="Fermer"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="modal-banner" id="user-modal-banner"></div>
+
+    <form id="user-form" novalidate>
+      <input type="hidden" id="user-id" />
+
+      <div class="field-group">
+        <label for="user-nom">Nom</label>
+        <div class="input-icon">
+          <i class="ti ti-user"></i>
+          <input type="text" id="user-nom" placeholder="Nom" autocomplete="off" />
+        </div>
+        <div class="field-error" id="user-nom-error">Le nom est requis.</div>
+      </div>
+
+      <div class="field-group">
+        <label for="user-prenom">Prénom</label>
+        <div class="input-icon">
+          <i class="ti ti-user"></i>
+          <input type="text" id="user-prenom" placeholder="Prénom" autocomplete="off" />
+        </div>
+        <div class="field-error" id="user-prenom-error">Le prénom est requis.</div>
+      </div>
+
+      <div class="field-group">
+        <label for="user-role-select">Rôle</label>
+        <div class="input-icon">
+          <i class="ti ti-shield"></i>
+          <select id="user-role-select"></select>
+        </div>
+        <div class="field-error" id="user-role-error">Choisissez un rôle.</div>
+      </div>
+
+      <div class="field-group" id="user-password-group">
+        <label for="user-password">Mot de passe</label>
+        <div class="input-icon">
+          <i class="ti ti-lock"></i>
+          <input type="password" id="user-password" placeholder="••••••••" autocomplete="new-password" />
+          <i class="ti ti-eye toggle" id="toggle-user-password"></i>
+        </div>
+        <div class="field-error" id="user-password-error">Le mot de passe est requis (6 caractères min.).</div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="user-cancel-btn">Annuler</button>
+        <button type="submit" class="btn btn-primary" id="user-submit-btn">
+          <span id="user-submit-label">Créer</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ---------- Modal : changer le mot de passe ---------- -->
+<div class="modal-overlay" id="pwd-modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2>Changer le mot de passe</h2>
+      <button class="modal-close" id="pwd-modal-close" aria-label="Fermer"><i class="ti ti-x"></i></button>
+    </div>
+
+    <div class="modal-banner" id="pwd-modal-banner"></div>
+
+    <form id="pwd-form" novalidate>
+      <input type="hidden" id="pwd-user-id" />
+
+      <div class="field-group">
+        <label for="pwd-new">Nouveau mot de passe</label>
+        <div class="input-icon">
+          <i class="ti ti-lock"></i>
+          <input type="password" id="pwd-new" placeholder="••••••••" autocomplete="new-password" />
+          <i class="ti ti-eye toggle" id="toggle-pwd-new"></i>
+        </div>
+        <div class="field-error" id="pwd-new-error">6 caractères minimum.</div>
+      </div>
+
+      <div class="modal-actions">
+        <button type="button" class="btn btn-secondary" id="pwd-cancel-btn">Annuler</button>
+        <button type="submit" class="btn btn-primary" id="pwd-submit-btn">
+          <span id="pwd-submit-label">Mettre à jour</span>
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ---------- Modal : confirmer suppression / désactivation (info) ---------- -->
+<div class="modal-overlay" id="confirm-modal-overlay">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h2>Confirmer</h2>
+      <button class="modal-close" id="confirm-modal-close" aria-label="Fermer"><i class="ti ti-x"></i></button>
+    </div>
+    <p class="sub" id="confirm-modal-text" style="font-size:13px; color: var(--text-secondary); margin: 0 0 20px;"></p>
+    <div class="modal-actions">
+      <button type="button" class="btn btn-secondary" id="confirm-cancel-btn">Annuler</button>
+      <button type="button" class="btn btn-ghost-danger" id="confirm-ok-btn">Confirmer</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  const API_BASE_URL = "http://127.0.0.1:8000";
+
+  const token = localStorage.getItem("school_token");
+  const username = localStorage.getItem("school_username");
+  const role = localStorage.getItem("school_role");
+
+  function decodeJwtPayload(t) {
+    try {
+      const payload = t.split(".")[1];
+      const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(decodeURIComponent(escape(atob(normalized))));
+    } catch {
+      return null;
+    }
+  }
+
+  function isTokenValid(t) {
+    const payload = decodeJwtPayload(t);
+    if (!payload || !payload.exp) return false;
+    return payload.exp * 1000 > Date.now();
+  }
+
+  if (!token || !isTokenValid(token)) {
+    window.location.href = "login.html";
+  }
+
+  const isAdmin = role === "1";
+
+  // Cette page est réservée aux administrateurs : on redirige les autres
+  // vers le tableau de bord plutôt que de leur laisser voir un état vide/cassé.
+  if (!isAdmin) {
+    window.location.href = "dashboard.html";
+  }
+
+  document.getElementById("user-name").textContent = username || "Utilisateur";
+  document.getElementById("user-avatar").textContent = username ? username.charAt(0).toUpperCase() : "·";
+  document.getElementById("user-role").textContent = "Administrateur";
+
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    localStorage.removeItem("school_token");
+    localStorage.removeItem("school_username");
+    localStorage.removeItem("school_role");
+    window.location.href = "login.html";
+  });
+
+  function authHeaders(json = true) {
+    const h = token ? { Authorization: `Bearer ${token}` } : {};
+    if (json) h["Content-Type"] = "application/json";
+    return h;
+  }
+
+  function showPageError(message) {
+    const banner = document.getElementById("page-banner");
+    banner.className = "status-banner visible";
+    banner.textContent = message;
+  }
+
+  function showPageSuccess(message) {
+    const banner = document.getElementById("page-banner");
+    banner.className = "status-banner visible success";
+    banner.textContent = message;
+    setTimeout(() => banner.classList.remove("visible"), 3500);
+  }
+
+  async function apiRequest(path, options = {}) {
+    let res;
+    try {
+      res = await fetch(`${API_BASE_URL}${path}`, options);
+    } catch {
+      throw new Error("Impossible de joindre le serveur.");
+    }
+    const text = await res.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch {}
+
+    if (res.status === 401) {
+      localStorage.removeItem("school_token");
+      window.location.href = "login.html";
+      throw new Error("Session expirée.");
+    }
+
+    if (!res.ok) {
+      const detail = (data && (data.detail || data.message)) || `Erreur ${res.status}`;
+      throw new Error(typeof detail === "string" ? detail : "Une erreur est survenue.");
+    }
+    return data;
+  }
+
+  // ---------- État ----------
+
+  let allUsers = [];
+  let allRoles = [];
+
+  function roleLabel(idRole) {
+    const r = allRoles.find((x) => x.IdRole === idRole);
+    return r ? r.LibelleRole : `Rôle #${idRole}`;
+  }
+
+  function initials(nom, prenom) {
+    const a = (prenom || "").charAt(0);
+    const b = (nom || "").charAt(0);
+    return (a + b).toUpperCase() || "?";
+  }
+
+  // ---------- Chargement des rôles ----------
+
+  async function loadRoles() {
+    allRoles = await apiRequest("/roles", { headers: authHeaders(false) });
+
+    const filterSelect = document.getElementById("role-filter");
+    const formSelect = document.getElementById("user-role-select");
+
+    allRoles.forEach((r) => {
+      const opt1 = document.createElement("option");
+      opt1.value = r.IdRole;
+      opt1.textContent = r.LibelleRole;
+      filterSelect.appendChild(opt1);
+
+      const opt2 = document.createElement("option");
+      opt2.value = r.IdRole;
+      opt2.textContent = r.LibelleRole;
+      formSelect.appendChild(opt2);
+    });
+  }
+
+  // ---------- Rendu du tableau ----------
+
+  function renderTable() {
+    const tbody = document.getElementById("users-tbody");
+    const search = document.getElementById("search-input").value.trim().toLowerCase();
+    const roleFilterVal = document.getElementById("role-filter").value;
+
+    let rows = allUsers;
+
+    if (search) {
+      rows = rows.filter((u) =>
+        `${u.Nom} ${u.Prenom}`.toLowerCase().includes(search)
+      );
+    }
+    if (roleFilterVal) {
+      rows = rows.filter((u) => String(u.IdRole) === roleFilterVal);
+    }
+
+    if (!rows.length) {
+      tbody.innerHTML = `<tr><td colspan="5"><div class="empty-state">Aucun utilisateur ne correspond.</div></td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = rows
+      .map((u) => {
+        const isAdminRole = u.IdRole === 1;
+        return `
+        <tr data-id="${u.IdUtilisateur}">
+          <td class="name-cell">
+            <span class="avatar-sm">${initials(u.Nom, u.Prenom)}</span>
+            <span class="fullname">${u.Prenom} ${u.Nom}</span>
+          </td>
+          <td><span class="role-pill ${isAdminRole ? "" : "non-admin"}">${roleLabel(u.IdRole)}</span></td>
+          <td class="meta">${u.CreeParNom || "—"}</td>
+          <td class="meta">${u.ModifieParNom || "—"}</td>
+          <td>
+            <div class="row-actions">
+              <button class="edit-btn" title="Modifier" aria-label="Modifier"><i class="ti ti-pencil"></i></button>
+              <button class="pwd-btn" title="Changer le mot de passe" aria-label="Changer le mot de passe"><i class="ti ti-key"></i></button>
+            </div>
+          </td>
+        </tr>`;
+      })
+      .join("");
+
+    tbody.querySelectorAll(".edit-btn").forEach((btn) =>
+      btn.addEventListener("click", (e) => {
+        const id = Number(e.target.closest("tr").dataset.id);
+        openEditModal(id);
+      })
+    );
+    tbody.querySelectorAll(".pwd-btn").forEach((btn) =>
+      btn.addEventListener("click", (e) => {
+        const id = Number(e.target.closest("tr").dataset.id);
+        openPasswordModal(id);
+      })
+    );
+  }
+
+  async function loadUsers() {
+    document.getElementById("users-tbody").innerHTML =
+      `<tr><td colspan="5"><div class="loading-state">Chargement…</div></td></tr>`;
+    try {
+      allUsers = await apiRequest("/utilisateurs", { headers: authHeaders(false) });
+      renderTable();
+    } catch (err) {
+      document.getElementById("users-tbody").innerHTML =
+        `<tr><td colspan="5"><div class="empty-state">Impossible de charger les utilisateurs.</div></td></tr>`;
+      showPageError(err.message);
+    }
+  }
+
+  document.getElementById("search-input").addEventListener("input", renderTable);
+  document.getElementById("role-filter").addEventListener("change", renderTable);
+
+  // ---------- Modal création / édition ----------
+
+  const userModalOverlay = document.getElementById("user-modal-overlay");
+  const userForm = document.getElementById("user-form");
+  const userModalTitle = document.getElementById("user-modal-title");
+  const userModalBanner = document.getElementById("user-modal-banner");
+  const userSubmitLabel = document.getElementById("user-submit-label");
+  const userSubmitBtn = document.getElementById("user-submit-btn");
+  const userPasswordGroup = document.getElementById("user-password-group");
+
+  function clearUserFormErrors() {
+    ["user-nom-error", "user-prenom-error", "user-role-error", "user-password-error"].forEach((id) =>
+      document.getElementById(id).classList.remove("visible")
+    );
+    userModalBanner.classList.remove("visible");
+  }
+
+  function resetUserForm() {
+    userForm.reset();
+    document.getElementById("user-id").value = "";
+    clearUserFormErrors();
+  }
+
+  function openCreateModal() {
+    resetUserForm();
+    userModalTitle.textContent = "Nouvel utilisateur";
+    userSubmitLabel.textContent = "Créer";
+    userPasswordGroup.style.display = "block";
+    document.getElementById("user-password").placeholder = "••••••••";
+    userModalOverlay.classList.add("visible");
+    document.getElementById("user-nom").focus();
+  }
+
+  function openEditModal(id) {
+    const u = allUsers.find((x) => x.IdUtilisateur === id);
+    if (!u) return;
+    resetUserForm();
+    userModalTitle.textContent = "Modifier l'utilisateur";
+    userSubmitLabel.textContent = "Enregistrer";
+    document.getElementById("user-id").value = u.IdUtilisateur;
+    document.getElementById("user-nom").value = u.Nom;
+    document.getElementById("user-prenom").value = u.Prenom;
+    document.getElementById("user-role-select").value = u.IdRole;
+    userPasswordGroup.style.display = "none";
+    userModalOverlay.classList.add("visible");
+    document.getElementById("user-nom").focus();
+  }
+
+  function closeUserModal() {
+    userModalOverlay.classList.remove("visible");
+  }
+
+  document.getElementById("open-create-btn").addEventListener("click", openCreateModal);
+  document.getElementById("user-cancel-btn").addEventListener("click", closeUserModal);
+  document.getElementById("user-modal-close").addEventListener("click", closeUserModal);
+  userModalOverlay.addEventListener("click", (e) => {
+    if (e.target === userModalOverlay) closeUserModal();
+  });
+
+  document.getElementById("toggle-user-password").addEventListener("click", () => {
+    const input = document.getElementById("user-password");
+    input.type = input.type === "password" ? "text" : "password";
+  });
+
+  userForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    clearUserFormErrors();
+
+    const id = document.getElementById("user-id").value;
+    const nom = document.getElementById("user-nom").value.trim();
+    const prenom = document.getElementById("user-prenom").value.trim();
+    const idRole = document.getElementById("user-role-select").value;
+    const password = document.getElementById("user-password").value;
+
+    let hasError = false;
+    if (!nom) { document.getElementById("user-nom-error").classList.add("visible"); hasError = true; }
+    if (!prenom) { document.getElementById("user-prenom-error").classList.add("visible"); hasError = true; }
+    if (!idRole) { document.getElementById("user-role-error").classList.add("visible"); hasError = true; }
+    if (!id && (!password || password.length < 6)) {
+      document.getElementById("user-password-error").classList.add("visible");
+      hasError = true;
+    }
+    if (hasError) return;
+
+    userSubmitBtn.disabled = true;
+    const originalLabel = userSubmitLabel.textContent;
+    userSubmitLabel.textContent = id ? "Enregistrement…" : "Création…";
+
+    try {
+      if (id) {
+        await apiRequest(`/utilisateurs/${id}`, {
+          method: "PUT",
+          headers: authHeaders(),
+          body: JSON.stringify({ nom, prenom, id_role: Number(idRole) }),
+        });
+        showPageSuccess("Utilisateur modifié avec succès.");
+      } else {
+        await apiRequest("/utilisateurs", {
+          method: "POST",
+          headers: authHeaders(),
+          body: JSON.stringify({ nom, prenom, motdepasse: password, id_role: Number(idRole) }),
+        });
+        showPageSuccess("Utilisateur créé avec succès.");
+      }
+      closeUserModal();
+      await loadUsers();
+    } catch (err) {
+      userModalBanner.textContent = err.message;
+      userModalBanner.classList.add("visible");
+    } finally {
+      userSubmitBtn.disabled = false;
+      userSubmitLabel.textContent = originalLabel;
+    }
+  });
+
+  // ---------- Modal changement de mot de passe ----------
+
+  const pwdModalOverlay = document.getElementById("pwd-modal-overlay");
+  const pwdForm = document.getElementById("pwd-form");
+  const pwdModalBanner = document.getElementById("pwd-modal-banner");
+  const pwdSubmitBtn = document.getElementById("pwd-submit-btn");
+  const pwdSubmitLabel = document.getElementById("pwd-submit-label");
+
+  function openPasswordModal(id) {
+    pwdForm.reset();
+    document.getElementById("pwd-new-error").classList.remove("visible");
+    pwdModalBanner.classList.remove("visible");
+    document.getElementById("pwd-user-id").value = id;
+    pwdModalOverlay.classList.add("visible");
+    document.getElementById("pwd-new").focus();
+  }
+
+  function closePasswordModal() {
+    pwdModalOverlay.classList.remove("visible");
+  }
+
+  document.getElementById("pwd-cancel-btn").addEventListener("click", closePasswordModal);
+  document.getElementById("pwd-modal-close").addEventListener("click", closePasswordModal);
+  pwdModalOverlay.addEventListener("click", (e) => {
+    if (e.target === pwdModalOverlay) closePasswordModal();
+  });
+
+  document.getElementById("toggle-pwd-new").addEventListener("click", () => {
+    const input = document.getElementById("pwd-new");
+    input.type = input.type === "password" ? "text" : "password";
+  });
+
+  pwdForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    pwdModalBanner.classList.remove("visible");
+    document.getElementById("pwd-new-error").classList.remove("visible");
+
+    const id = document.getElementById("pwd-user-id").value;
+    const newPassword = document.getElementById("pwd-new").value;
+
+    if (!newPassword || newPassword.length < 6) {
+      document.getElementById("pwd-new-error").classList.add("visible");
+      return;
+    }
+
+    pwdSubmitBtn.disabled = true;
+    pwdSubmitLabel.textContent = "Mise à jour…";
+
+    try {
+      await apiRequest(`/utilisateurs/${id}/mot-de-passe`, {
+        method: "PATCH",
+        headers: authHeaders(),
+        body: JSON.stringify({ motdepasse: newPassword }),
+      });
+      closePasswordModal();
+      showPageSuccess("Mot de passe mis à jour avec succès.");
+    } catch (err) {
+      pwdModalBanner.textContent = err.message;
+      pwdModalBanner.classList.add("visible");
+    } finally {
+      pwdSubmitBtn.disabled = false;
+      pwdSubmitLabel.textContent = "Mettre à jour";
+    }
+  });
+
+  // ---------- Init ----------
+
+  (async function init() {
+    try {
+      await loadRoles();
+      await loadUsers();
+    } catch (err) {
+      showPageError(err.message || "Erreur au chargement de la page.");
+    }
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,388 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SCHOOL — Connexion</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg-0: #0B0C0E;
+    --bg-1: #111318;
+    --bg-2: #15171B;
+    --border: #1E2024;
+    --border-strong: #24262B;
+
+    --text-primary: #F2EDE4;
+    --text-secondary: #8A8D93;
+    --text-muted: #6B6E74;
+    --text-faint: #4A4C51;
+
+    --gold: #C9930A;
+    --on-gold: #1A1300;
+
+    --danger: #E24B4A;
+    --danger-bg: rgba(226, 75, 74, 0.12);
+
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-0);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .login-screen {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px 20px;
+    position: relative;
+  }
+
+  .login-brand { text-align: center; margin-bottom: 34px; }
+  .login-brand span {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 34px;
+    color: var(--text-primary);
+    letter-spacing: 5px;
+  }
+  .login-brand .rule {
+    height: 1px;
+    width: 46px;
+    background: var(--gold);
+    margin: 12px auto 0;
+  }
+  .login-brand p {
+    font-size: 12px;
+    color: var(--text-muted);
+    margin: 10px 0 0;
+    letter-spacing: 0.3px;
+  }
+
+  .login-card {
+    width: 100%;
+    max-width: 320px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    padding: 28px 26px;
+  }
+
+  .field-group { margin-bottom: 16px; }
+  .field-group label {
+    display: block;
+    font-size: 11.5px;
+    color: var(--text-secondary);
+    margin-bottom: 7px;
+    letter-spacing: 0.3px;
+  }
+
+  .input-icon {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 6px;
+    padding: 10px 12px;
+  }
+  .input-icon:focus-within { border-color: var(--gold); }
+  .input-icon i { font-size: 15px; color: var(--text-muted); flex-shrink: 0; }
+  .input-icon i.toggle { margin-left: auto; cursor: pointer; }
+  .input-icon input {
+    border: none;
+    background: transparent;
+    outline: none;
+    color: var(--text-primary);
+    font-size: 13px;
+    width: 100%;
+    font-family: inherit;
+  }
+  .input-icon input::placeholder { color: var(--text-faint); }
+
+  .field-error {
+    font-size: 11.5px;
+    color: var(--danger);
+    margin-top: 5px;
+    display: none;
+  }
+  .field-error.visible { display: block; }
+
+  .modal-banner {
+    font-size: 12.5px;
+    padding: 9px 12px;
+    border-radius: 6px;
+    margin-bottom: 16px;
+    display: none;
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+  .modal-banner.visible { display: block; }
+
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+    font-weight: 500;
+    padding: 11px 16px;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .btn-primary {
+    background: var(--gold);
+    color: var(--on-gold);
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-primary:hover { background: #DBA31A; }
+  .btn-primary:disabled { opacity: 0.5; cursor: not-allowed; }
+
+  .btn-secondary {
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    color: var(--text-primary);
+    width: 100%;
+    justify-content: center;
+  }
+  .btn-secondary:hover { border-color: var(--text-muted); }
+
+  .login-footnote {
+    text-align: center;
+    margin-top: 14px;
+    font-size: 11.5px;
+    color: var(--text-faint);
+  }
+
+  .login-api-config {
+    margin-top: 18px;
+    padding-top: 16px;
+    border-top: 1px solid var(--border);
+  }
+  .login-api-toggle {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    background: transparent;
+    border: none;
+    width: 100%;
+    justify-content: center;
+    cursor: pointer;
+    font-family: inherit;
+  }
+  .login-api-toggle:hover { color: var(--text-secondary); }
+  .login-api-panel { margin-top: 12px; display: none; }
+  .login-api-panel.visible { display: block; }
+  .field-hint {
+    font-size: 11px;
+    color: var(--text-muted);
+    margin-top: 5px;
+    text-align: center;
+  }
+
+  .login-signature {
+    position: absolute;
+    bottom: 26px;
+    text-align: center;
+  }
+  .login-signature span {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 4px;
+    color: #FFFFFF;
+    text-shadow: 0 0 6px rgba(255, 255, 255, 0.55), 0 0 14px rgba(255, 255, 255, 0.25);
+  }
+</style>
+</head>
+<body>
+
+<div class="login-screen">
+
+  <div class="login-brand">
+    <span>SCHOOL</span>
+    <div class="rule"></div>
+    <p>Gestion des écoles et entreprises partenaires</p>
+  </div>
+
+  <div class="login-card">
+    <div id="login-banner" class="modal-banner"></div>
+
+    <form id="login-form" novalidate>
+      <div class="field-group">
+        <label for="username">Nom d'utilisateur</label>
+        <div class="input-icon">
+          <i class="ti ti-user" aria-hidden="true"></i>
+          <input type="text" id="username" name="username" placeholder="Votre nom" autocomplete="username" />
+        </div>
+        <div class="field-error" id="username-error">Entrez votre nom d'utilisateur.</div>
+      </div>
+
+      <div class="field-group">
+        <label for="password">Mot de passe</label>
+        <div class="input-icon">
+          <i class="ti ti-lock" aria-hidden="true"></i>
+          <input type="password" id="password" name="password" placeholder="••••••••" autocomplete="current-password" />
+          <i class="ti ti-eye toggle" id="toggle-password" aria-label="Afficher le mot de passe"></i>
+        </div>
+        <div class="field-error" id="password-error">Entrez votre mot de passe.</div>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="submit-btn">
+        <span id="submit-label">Se connecter</span>
+        <i class="ti ti-arrow-right" aria-hidden="true"></i>
+      </button>
+
+      <div class="login-footnote">Accès réservé au personnel autorisé</div>
+    </form>
+
+  </div>
+
+  <div class="login-signature"><span>J &amp; K</span></div>
+</div>
+
+<script>
+  // Adresse du backend. À changer ici quand tu géreras ngrok toi-même.
+  const API_BASE_URL = "http://127.0.0.1:8000";
+
+  function decodeJwtPayload(token) {
+    try {
+      const payload = token.split(".")[1];
+      const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(decodeURIComponent(escape(atob(normalized))));
+    } catch {
+      return null;
+    }
+  }
+
+  function isTokenValid(token) {
+    const payload = decodeJwtPayload(token);
+    if (!payload || !payload.exp) return false;
+    return payload.exp * 1000 > Date.now();
+  }
+
+  // Si un token valide existe déjà, pas besoin de re-render un dashboard
+  // (pas encore fait) — on se contente de ne pas re-proposer le formulaire vide.
+  (function checkExistingSession() {
+    const token = localStorage.getItem("school_token");
+    if (token && isTokenValid(token)) {
+      const banner = document.getElementById("login-banner");
+      banner.textContent = "Vous êtes déjà connecté.";
+      banner.style.background = "rgba(99,153,34,0.12)";
+      banner.style.color = "#97C459";
+      banner.classList.add("visible");
+    }
+  })();
+
+  const form = document.getElementById("login-form");
+  const banner = document.getElementById("login-banner");
+  const submitBtn = document.getElementById("submit-btn");
+  const submitLabel = document.getElementById("submit-label");
+
+  const usernameInput = document.getElementById("username");
+  const passwordInput = document.getElementById("password");
+  const usernameError = document.getElementById("username-error");
+  const passwordError = document.getElementById("password-error");
+
+  document.getElementById("toggle-password").addEventListener("click", () => {
+    const isHidden = passwordInput.type === "password";
+    passwordInput.type = isHidden ? "text" : "password";
+  });
+
+  usernameInput.addEventListener("input", () => usernameError.classList.remove("visible"));
+  passwordInput.addEventListener("input", () => passwordError.classList.remove("visible"));
+
+  async function login(username, password) {
+    const form = new URLSearchParams();
+    form.set("username", username);
+    form.set("password", password);
+
+    let response;
+    try {
+      response = await fetch(`${API_BASE_URL}/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/x-www-form-urlencoded" },
+        body: form,
+      });
+    } catch {
+      throw new Error("Impossible de joindre le serveur.");
+    }
+
+    const text = await response.text();
+    let data = null;
+    try { data = text ? JSON.parse(text) : null; } catch {}
+
+    if (!response.ok) {
+      const detail = (data && (data.detail || data.message)) || `Erreur ${response.status}`;
+      throw new Error(typeof detail === "string" ? detail : "Nom d'utilisateur ou mot de passe incorrect.");
+    }
+
+    if (!data || !data.access_token) {
+      throw new Error("Réponse inattendue du serveur.");
+    }
+
+    localStorage.setItem("school_token", data.access_token);
+    localStorage.setItem("school_username", username);
+
+    const payload = decodeJwtPayload(data.access_token);
+    if (payload && payload.id_role !== undefined) {
+      localStorage.setItem("school_role", String(payload.id_role));
+    }
+  }
+
+  form.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    banner.classList.remove("visible");
+
+    let hasError = false;
+    if (!usernameInput.value.trim()) {
+      usernameError.classList.add("visible");
+      hasError = true;
+    }
+    if (!passwordInput.value) {
+      passwordError.classList.add("visible");
+      hasError = true;
+    }
+    if (hasError) return;
+
+    submitBtn.disabled = true;
+    submitLabel.textContent = "Connexion...";
+
+    try {
+      await login(usernameInput.value.trim(), passwordInput.value);
+      banner.style.background = "rgba(99,153,34,0.12)";
+      banner.style.color = "#97C459";
+      banner.textContent = "Connexion réussie. (La page suivante n'est pas encore construite.)";
+      banner.classList.add("visible");
+    } catch (err) {
+      banner.style.background = "rgba(226,75,74,0.12)";
+      banner.style.color = "#E24B4A";
+      banner.textContent = err.message || "Nom d'utilisateur ou mot de passe incorrect.";
+      banner.classList.add("visible");
+    } finally {
+      submitBtn.disabled = false;
+      submitLabel.textContent = "Se connecter";
+    }
+  });
+
+</script>
+
+</body>
+</html>

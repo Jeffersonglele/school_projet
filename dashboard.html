@@ -1,0 +1,543 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>SCHOOL — Tableau de bord</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tabler-icons/2.44.0/tabler-icons.min.css" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@600;700&family=Inter:wght@400;500;600&family=DM+Mono:wght@400;500&display=swap');
+
+  :root {
+    --bg-0: #0B0C0E;
+    --bg-1: #111318;
+    --bg-2: #15171B;
+    --border: #1E2024;
+    --border-strong: #24262B;
+
+    --text-primary: #F2EDE4;
+    --text-secondary: #8A8D93;
+    --text-muted: #6B6E74;
+    --text-faint: #4A4C51;
+
+    --gold: #C9930A;
+    --gold-dim: rgba(201, 147, 10, 0.14);
+    --on-gold: #1A1300;
+
+    --good: #97C459;
+    --good-bg: rgba(99, 153, 34, 0.12);
+    --danger: #E24B4A;
+    --danger-bg: rgba(226, 75, 74, 0.12);
+
+    --font-display: 'Cormorant Garamond', serif;
+    --font-body: 'Inter', sans-serif;
+    --font-mono: 'DM Mono', monospace;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    background: var(--bg-0);
+    color: var(--text-primary);
+    font-family: var(--font-body);
+    -webkit-font-smoothing: antialiased;
+  }
+
+  a { color: inherit; text-decoration: none; }
+
+  /* ---------- Topbar ---------- */
+
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 16px 32px;
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-1);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .topbar-brand {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+  }
+  .topbar-brand span.mark {
+    font-family: var(--font-display);
+    font-weight: 700;
+    font-size: 21px;
+    letter-spacing: 3px;
+  }
+  .topbar-brand span.sep {
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--gold);
+    display: inline-block;
+  }
+  .topbar-brand span.section {
+    font-size: 12px;
+    color: var(--text-muted);
+    letter-spacing: 0.3px;
+  }
+
+  .topbar-user {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .user-chip {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    padding: 6px 12px 6px 6px;
+    background: var(--bg-2);
+    border: 1px solid var(--border-strong);
+    border-radius: 30px;
+  }
+  .user-chip .avatar {
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    background: var(--gold-dim);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--font-mono);
+    font-size: 12px;
+  }
+  .user-chip .name {
+    font-size: 12.5px;
+    color: var(--text-primary);
+  }
+  .user-chip .role {
+    font-size: 10px;
+    color: var(--gold);
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+  }
+
+  .btn-icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    border: 1px solid var(--border-strong);
+    background: var(--bg-2);
+    color: var(--text-secondary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .btn-icon:hover { color: var(--danger); border-color: var(--danger); }
+
+  /* ---------- Layout ---------- */
+
+  .page {
+    max-width: 1040px;
+    margin: 0 auto;
+    padding: 40px 32px 80px;
+  }
+
+  .page-head p.eyebrow {
+    font-size: 11.5px;
+    color: var(--gold);
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    margin: 0 0 8px;
+  }
+  .page-head h1 {
+    font-family: var(--font-display);
+    font-weight: 600;
+    font-size: 32px;
+    margin: 0 0 6px;
+  }
+  .page-head p.sub {
+    font-size: 13.5px;
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .status-banner {
+    margin-top: 20px;
+    font-size: 12.5px;
+    padding: 10px 14px;
+    border-radius: 6px;
+    display: none;
+    background: var(--danger-bg);
+    color: var(--danger);
+  }
+  .status-banner.visible { display: block; }
+
+  /* ---------- Stat cards (ledger) ---------- */
+
+  .ledger {
+    margin-top: 34px;
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-1);
+    overflow: hidden;
+  }
+  .ledger-cell {
+    padding: 22px 24px;
+    border-right: 1px solid var(--border);
+  }
+  .ledger-cell:last-child { border-right: none; }
+  .ledger-cell .label {
+    font-size: 11px;
+    color: var(--text-muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .ledger-cell .value {
+    font-family: var(--font-mono);
+    font-size: 34px;
+    color: var(--text-primary);
+    line-height: 1;
+  }
+  .ledger-cell .value.skeleton {
+    color: var(--text-faint);
+  }
+  .ledger-cell .detail {
+    margin-top: 10px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+  }
+  .ledger-cell .detail .good { color: var(--good); }
+
+  @media (max-width: 720px) {
+    .ledger { grid-template-columns: 1fr; }
+    .ledger-cell { border-right: none; border-bottom: 1px solid var(--border); }
+    .ledger-cell:last-child { border-bottom: none; }
+  }
+
+  /* ---------- Quick access ---------- */
+
+  .section-label {
+    margin-top: 48px;
+    margin-bottom: 14px;
+    font-size: 11.5px;
+    color: var(--text-muted);
+    letter-spacing: 0.6px;
+    text-transform: uppercase;
+  }
+
+  .quick-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 12px;
+  }
+  @media (max-width: 720px) {
+    .quick-grid { grid-template-columns: 1fr; }
+  }
+
+  .quick-card {
+    display: block;
+    padding: 20px;
+    background: var(--bg-1);
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    transition: border-color 0.15s ease;
+  }
+  .quick-card:hover { border-color: var(--gold); }
+  .quick-card .icon {
+    width: 34px;
+    height: 34px;
+    border-radius: 8px;
+    background: var(--gold-dim);
+    color: var(--gold);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 14px;
+    font-size: 16px;
+  }
+  .quick-card .title {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+  .quick-card .desc {
+    font-size: 12px;
+    color: var(--text-muted);
+  }
+  .quick-card.disabled {
+    opacity: 0.45;
+    pointer-events: none;
+  }
+
+  /* ---------- Recent list ---------- */
+
+  .recent-list {
+    border: 1px solid var(--border);
+    border-radius: 10px;
+    background: var(--bg-1);
+    overflow: hidden;
+  }
+  .recent-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 14px 20px;
+    border-bottom: 1px solid var(--border);
+    font-size: 13px;
+  }
+  .recent-row:last-child { border-bottom: none; }
+  .recent-row .left {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .recent-row .tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    padding: 3px 7px;
+    border-radius: 4px;
+    letter-spacing: 0.4px;
+  }
+  .recent-row .tag.ecole { background: var(--gold-dim); color: var(--gold); }
+  .recent-row .tag.entreprise { background: rgba(138, 141, 147, 0.14); color: var(--text-secondary); }
+  .recent-row .name { color: var(--text-primary); }
+  .recent-row .year { color: var(--text-faint); font-family: var(--font-mono); font-size: 11.5px; }
+
+  .empty-state {
+    padding: 30px 20px;
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 12.5px;
+  }
+</style>
+</head>
+<body>
+
+<div class="topbar">
+  <div class="topbar-brand">
+    <span class="mark">SCHOOL</span>
+    <span class="sep"></span>
+    <span class="section">Tableau de bord</span>
+  </div>
+  <div class="topbar-user">
+    <div class="user-chip">
+      <span class="avatar" id="user-avatar">·</span>
+      <span>
+        <span class="name" id="user-name">—</span><br />
+        <span class="role" id="user-role">—</span>
+      </span>
+    </div>
+    <button class="btn-icon" id="logout-btn" title="Se déconnecter" aria-label="Se déconnecter">
+      <i class="ti ti-logout"></i>
+    </button>
+  </div>
+</div>
+
+<div class="page">
+
+  <div class="page-head">
+    <p class="eyebrow">Vue d'ensemble</p>
+    <h1 id="greeting">Bonjour</h1>
+    <p class="sub">État actuel des écoles et entreprises partenaires enregistrées.</p>
+  </div>
+
+  <div class="status-banner" id="status-banner"></div>
+
+  <div class="ledger">
+    <div class="ledger-cell">
+      <div class="label">Écoles actives</div>
+      <div class="value skeleton" id="stat-ecoles">—</div>
+      <div class="detail" id="stat-ecoles-detail">Chargement…</div>
+    </div>
+    <div class="ledger-cell">
+      <div class="label">Entreprises actives</div>
+      <div class="value skeleton" id="stat-entreprises">—</div>
+      <div class="detail" id="stat-entreprises-detail">Chargement…</div>
+    </div>
+    <div class="ledger-cell" id="stat-utilisateurs-cell">
+      <div class="label">Utilisateurs</div>
+      <div class="value skeleton" id="stat-utilisateurs">—</div>
+      <div class="detail" id="stat-utilisateurs-detail">Chargement…</div>
+    </div>
+  </div>
+
+  <div class="section-label">Accès rapide</div>
+  <div class="quick-grid">
+    <a class="quick-card" href="ecoles.html">
+      <div class="icon"><i class="ti ti-school"></i></div>
+      <div class="title">Écoles</div>
+      <div class="desc">Consulter, ajouter, modifier</div>
+    </a>
+    <a class="quick-card" href="entreprises.html">
+      <div class="icon"><i class="ti ti-building-skyscraper"></i></div>
+      <div class="title">Entreprises</div>
+      <div class="desc">Consulter, ajouter, modifier</div>
+    </a>
+    <a class="quick-card" href="utilisateurs.html" id="quick-utilisateurs">
+      <div class="icon"><i class="ti ti-users"></i></div>
+      <div class="title">Utilisateurs</div>
+      <div class="desc">Réservé aux administrateurs</div>
+    </a>
+  </div>
+
+  <div class="section-label">Derniers ajouts</div>
+  <div class="recent-list" id="recent-list">
+    <div class="empty-state">Chargement…</div>
+  </div>
+
+</div>
+
+<script>
+  const API_BASE_URL = "http://127.0.0.1:8000";
+
+  const token = localStorage.getItem("school_token");
+  const username = localStorage.getItem("school_username");
+  const role = localStorage.getItem("school_role");
+
+  function decodeJwtPayload(t) {
+    try {
+      const payload = t.split(".")[1];
+      const normalized = payload.replace(/-/g, "+").replace(/_/g, "/");
+      return JSON.parse(decodeURIComponent(escape(atob(normalized))));
+    } catch {
+      return null;
+    }
+  }
+
+  function isTokenValid(t) {
+    const payload = decodeJwtPayload(t);
+    if (!payload || !payload.exp) return false;
+    return payload.exp * 1000 > Date.now();
+  }
+
+  // Garde d'authentification : pas de token valide -> retour au login.
+  if (!token || !isTokenValid(token)) {
+    window.location.href = "login.html";
+  }
+
+  const isAdmin = role === "1";
+
+  document.getElementById("greeting").textContent = username ? `Bonjour, ${username}` : "Bonjour";
+  document.getElementById("user-name").textContent = username || "Utilisateur";
+  document.getElementById("user-avatar").textContent = username ? username.charAt(0).toUpperCase() : "·";
+  document.getElementById("user-role").textContent = isAdmin ? "Administrateur" : "Utilisateur";
+
+  if (!isAdmin) {
+    document.getElementById("stat-utilisateurs-cell").style.display = "none";
+    const qu = document.getElementById("quick-utilisateurs");
+    qu.classList.add("disabled");
+  }
+
+  document.getElementById("logout-btn").addEventListener("click", () => {
+    localStorage.removeItem("school_token");
+    localStorage.removeItem("school_username");
+    localStorage.removeItem("school_role");
+    window.location.href = "login.html";
+  });
+
+  function authHeaders() {
+    return token ? { Authorization: `Bearer ${token}` } : {};
+  }
+
+  function showError(message) {
+    const banner = document.getElementById("status-banner");
+    banner.textContent = message;
+    banner.classList.add("visible");
+  }
+
+  async function fetchJson(path) {
+    const res = await fetch(`${API_BASE_URL}${path}`, { headers: authHeaders() });
+    if (!res.ok) throw new Error(`Erreur ${res.status} sur ${path}`);
+    return res.json();
+  }
+
+  function setStat(prefix, activeCount, totalCount) {
+    document.getElementById(`stat-${prefix}`).textContent = activeCount;
+    document.getElementById(`stat-${prefix}`).classList.remove("skeleton");
+    const inactifs = totalCount - activeCount;
+    document.getElementById(`stat-${prefix}-detail`).innerHTML =
+      inactifs > 0
+        ? `<span class="good">${activeCount}</span> actives sur ${totalCount}`
+        : `${totalCount} au total`;
+  }
+
+  function renderRecent(items) {
+    const list = document.getElementById("recent-list");
+    if (!items.length) {
+      list.innerHTML = `<div class="empty-state">Aucun enregistrement pour le moment.</div>`;
+      return;
+    }
+    list.innerHTML = items
+      .map(
+        (item) => `
+        <div class="recent-row">
+          <div class="left">
+            <span class="tag ${item.type}">${item.type === "ecole" ? "École" : "Entreprise"}</span>
+            <span class="name">${item.nom}</span>
+          </div>
+          <span class="year">${item.annee ?? ""}</span>
+        </div>`
+      )
+      .join("");
+  }
+
+  async function loadDashboard() {
+    const tasks = [];
+
+    tasks.push(
+      fetchJson("/ecoles")
+        .then((rows) => {
+          const actives = rows.filter((r) => r.Actif).length;
+          setStat("ecoles", actives, rows.length);
+          return rows.map((r) => ({ type: "ecole", nom: r.Nom, annee: r.AnneeEnregistrement }));
+        })
+        .catch(() => {
+          document.getElementById("stat-ecoles-detail").textContent = "Indisponible";
+          return [];
+        })
+    );
+
+    tasks.push(
+      fetchJson("/entreprises")
+        .then((rows) => {
+          const actives = rows.filter((r) => r.Actif).length;
+          setStat("entreprises", actives, rows.length);
+          return rows.map((r) => ({ type: "entreprise", nom: r.Nom, annee: r.AnneeEnregistrement }));
+        })
+        .catch(() => {
+          document.getElementById("stat-entreprises-detail").textContent = "Indisponible";
+          return [];
+        })
+    );
+
+    if (isAdmin) {
+      fetchJson("/utilisateurs")
+        .then((rows) => {
+          document.getElementById("stat-utilisateurs").textContent = rows.length;
+          document.getElementById("stat-utilisateurs").classList.remove("skeleton");
+          document.getElementById("stat-utilisateurs-detail").textContent = "Comptes enregistrés";
+        })
+        .catch(() => {
+          document.getElementById("stat-utilisateurs-detail").textContent = "Indisponible";
+        });
+    }
+
+    const [ecoles, entreprises] = await Promise.all(tasks);
+    const combined = [...ecoles, ...entreprises]
+      .sort((a, b) => (b.annee ?? 0) - (a.annee ?? 0))
+      .slice(0, 6);
+    renderRecent(combined);
+  }
+
+  loadDashboard().catch(() => {
+    showError("Impossible de joindre le serveur. Vérifie que l'API est démarrée.");
+  });
+</script>
+
+</body>
+</html>
