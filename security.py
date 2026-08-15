@@ -1,24 +1,20 @@
 import os
 from datetime import datetime, timedelta, timezone
-from passlib.context import CryptContext
 from jose import jwt, JWTError
-
-# ---------------------------------------------------------------------------
-# Hachage des mots de passe (bcrypt)
-# ---------------------------------------------------------------------------
-
-pwd_context = CryptContext(schemes=["bcrypt"], deprecated="auto")
-
+import bcrypt
 
 def hash_password(plain_password: str) -> str:
-    """Hache un mot de passe en clair. À utiliser à la création d'un
-    utilisateur et au changement de mot de passe, avant l'INSERT/UPDATE."""
-    return pwd_context.hash(plain_password)
-
+    """Hache un mot de passe en clair."""
+    pwd_bytes = plain_password.encode('utf-8')
+    salt = bcrypt.gensalt()
+    hashed_password = bcrypt.hashpw(password=pwd_bytes, salt=salt)
+    return hashed_password.decode('utf-8')
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    """Compare un mot de passe en clair (saisi au login) à son hash stocké en base."""
-    return pwd_context.verify(plain_password, hashed_password)
+    """Compare un mot de passe en clair à son hash stocké en base."""
+    password_bytes = plain_password.encode('utf-8')
+    hashed_password_bytes = hashed_password.encode('utf-8')
+    return bcrypt.checkpw(password_bytes, hashed_password_bytes)
 
 
 # ---------------------------------------------------------------------------
